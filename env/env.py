@@ -655,51 +655,55 @@ class Environment:
 
     def place_in_loc(self, target_loc: Union[List[float], str], vis: bool = False):
         """
-        Place object in target location
+        Place object in target location.
+        target_loc: either a string key in TARGET_LOCATIONS or a 3D coordinate [x, y, z]
         """
-        try:
-            grasped_obj_id = self.check_grasped_id()[0]
-        except:
-            print('No object currently in gripper. Exitting.')
+        # Get currently grasped object
+        grasped_ids = self.check_grasped_id()
+        if not grasped_ids:
+            print('No object currently in gripper. Exiting.')
             return False
-        
-        # Check if target location is 3D position
-        if isinstance(target_loc, list) or isinstance(target_loc, tuple):
-            x, y, z = target_loc
+        grasped_obj_id = grasped_ids[0]
 
-        # Move object to target table region
+        # Determine target coordinates
+        if isinstance(target_loc, (list, tuple)):
+            x, y, z = target_loc
         elif isinstance(target_loc, str):
-            assert target_loc in self.TARGET_LOCATIONS.keys(), f'unknown location {target_loc}'
+            if target_loc not in self.TARGET_LOCATIONS:
+                raise ValueError(f"Unknown target location '{target_loc}'")
             x, y, z = self.TARGET_LOCATIONS[target_loc]
-        
+        else:
+            raise TypeError("target_loc must be a list, tuple, or string key")
+
+        # Fixed target orientation for placing
         tgt_orn = p.getQuaternionFromEuler([-np.pi*0.25, np.pi/2, 0.0])
 
+        # Move end-effector to target
         self.move_ee([x, y, z, tgt_orn])
         self.move_gripper(0.085)
         self.move_ee([x, y, self.GRIPPER_MOVING_HEIGHT, tgt_orn])
-        
-        # Wait then check if object is in target zone
+
+        # Step simulation to stabilize
         for _ in range(20):
             self.step_simulation()
 
-        succes_target = False
-        if self.check_target_loc_reached(grasped_obj_id, [x, y, z]):
-            succes_target = True
-        
+        succes_target = self.check_target_loc_reached(grasped_obj_id, [x, y, z])
         return succes_target
         
-    def put_obj_in_loc(self, obj_id: int, target_loc: str, vis: bool = False):
+    def put_obj_in_loc(self, obj_id: int, target_loc: Union[List[float], str], vis: bool = False):
         """
-        Pick object by id and place it in target location
+        Pick object by id and place it in target location.
+        target_loc: string key or 3D coordinates
         """
-        succes_grasp, succes_target = False, False 
-    
         # pick object by id
         succes_grasp, grasped_obj_id, grasp = self.pick_obj(obj_id, vis=vis)
 
-        # Move object to target zone
+        if not succes_grasp:
+            print(f"Failed to pick object {self.obj_names[obj_id]}")
+            return False, False
+
+        # place object using updated place_in_loc
         succes_target = self.place_in_loc(target_loc, vis=vis)
-        
         return succes_grasp, succes_target
 
     def check_target_loc_reached(self, obj_id, pos):

@@ -1,61 +1,39 @@
 from huggingface_hub import InferenceClient
 import time
+import os
 
-hugging_hub_token = None
+hugging_hub_token = os.getenv("HF_TOKEN")
 if hugging_hub_token is None:
     raise ValueError("Get your Hugging Hub API token from here: https://huggingface.co/docs/hub/security-tokens.\nThen, set it in llm_utils.py.")
 
 #llm_inference = InferenceClient("bigscience/bloom", token=hugging_hub_token)
 llm_inference = InferenceClient("meta-llama/Llama-3.2-3B-Instruct", token=hugging_hub_token) #Llama-3.2
 
-
-def LLM(         query,
-                 prompt,
-                 stop_tokens = None,
-                 max_length = 128,
-                 temperature=1.,
-                 return_full_text = False,
-                 verbose = False
-):
+def LLM(query, prompt, **params):
+    # This role forces the Instruct model to behave like a Base model
+    messages = [
+        {
+            "role": "system", 
+            "content": "You are a code completion engine for a robot. Output ONLY the next line of code. Do not use markdown. Do not explain. Your output must start with 'robot.pick_and_place'."
+        },
+        {"role": "user", "content": prompt + "\n\n" + query}
+    ]
     
-    new_prompt = f'{prompt}\n{query}\n'
+    response = llm_inference.chat_completion(
+        messages=messages,
+        max_tokens=512, # Shorten this to prevent long ramblings
+        temperature=0,
+        # 'stop' is our safety net: it cuts the LLM off if it starts talking
+        stop=["#", "class", "```", "Note:", "\n\n"] 
+    )
     
-    params = {
-        "max_new_tokens": max_length,
-        "top_k": None,
-        "top_p": None,
-        #"temperature": temperature,
-        "do_sample": False,
-        # "seed": 42, #useless
-        # "early_stopping":None,
-        # "no_repeat_ngram_size":None,
-        # "num_beams":None,
-        # "return_full_text":return_full_text,
-        # 'wait_for_model' : True
-    }
-    s = time.time()
-    #response = llm_inference(new_prompt, params=params)
-    response = llm_inference.text_generation(new_prompt, **params)
-    proc_time = time.time()-s
-    if verbose:
-        print(f"Inference time {proc_time} seconds")
+    content = response.choices[0].message.content.strip()
+    
+    # Final safety check: if it still put text before the command, strip it
+    if "robot." in content:
+        content = content[content.find("robot."):]
         
-    if isinstance(response, dict):
-        assert list(response.keys()) == ['error']
-        raise ValueError(f'sth went wrong with prompt {new_prompt}')
-
-    #response = response[0]['generated_text']
-    #response = response[(response.find(query) + len(query) + 1):]
-
-    if stop_tokens is not None:
-        if verbose:
-            print('Stopping')
-        for stoken in stop_tokens:
-            if stoken in response:
-                response = response[:response.index(stoken)]
-
-
-    return response
+    return content
 
 
 def LLMWrapper(query, context, verbose=False):
@@ -72,6 +50,31 @@ def LLMWrapper(query, context, verbose=False):
         print(query)
         print(resp_full)
     return resp, resp_obj
+
+def LLM_geometric(instruction: str, objects_list: list, llm_fn, max_tokens=512):
+    """
+    Calls the LLM to output pick-and-place commands.
+    Coordinates: X,Z: [0-1], Y: [-1, 0]
+    """
+    # Create visual context
+    object_strs = [f'"{obj}"' for obj in objects_list]
+    visual_context = "objects = [" + ", ".join(object_strs) + "]"
+    
+    # Build query
+    query = visual_context + "\n# " + instruction
+    
+    # Call LLM
+    content = llm_fn(query, prompt=prompt_geometric_arrangement, max_tokens=max_tokens)
+    
+    # Strip anything before robot command
+    if "robot." in content:
+        content = content[content.find("robot."):]
+    
+    # Split into lines and keep only valid commands
+    step_cmds = [line.strip() for line in content.split('\n') 
+                 if line.strip().startswith('robot.pick_and_place')]
+    
+    return "\n".join(step_cmds)
 
 
 prompt_pick_and_place_detection = """
@@ -132,3 +135,72 @@ cans = find(objects, "can")
 for can_instance in cans:
     pick_and_place(can_instance, "tray")
 """.strip()
+
+prompt_geometric_arrangement = """
+You are a robotic manipulation assistant. Given visible objects and an instruction,
+output Python commands using robot.pick_and_place(object_name, [x, y, z]).
+
+COORDINATE SYSTEM:
+- X: -0.5 (LEFT BOUND) → 0.0 (CENTER) → 0.5 (RIGHT BOUND)
+- Y: -0.85 (TOP/FAR from robot) → -0.5 (MIDDLE) → -0.15 (BOTTOM/NEAR robot)
+- Z: Always 1.0 (table surface)
+
+IMPORTANT:
+- X: -0.35 to 0.35
+- Y: -0.85 to -0.15 (MUST BE NEGATIVE!)
+- Output ONLY robot.pick_and_place commands (no comments, no explanations)
+- Prefer symmetry around X=0 unless instructed otherwise.
+
+Rules:
+- Always output robot.pick_and_place(object_name, [x, y, z])
+- Coordinates must satisfy:
+  x ∈ [-0.35,0.35], y ∈ [-0.85,-0.15], z = 1.0
+- Do NOT use symbolic positions (left, right, middle, etc.)
+
+# Example: Horizontal line (left to right)
+objects = ["red_cube", "blue_cube", "green_cube"]
+robot.pick_and_place("red_cube", [0.35, -0.5, 1.0])
+robot.pick_and_place("blue_cube", [0.0, -0.5, 1.0])
+robot.pick_and_place("green_cube", [-0.35, -0.5, 1.0])
+
+# Example: Vertical line (far to near)
+objects = ["apple", "banana", "orange"]
+robot.pick_and_place("apple",  [0.0, -0.85, 1.0])
+robot.pick_and_place("banana", [0.0, -0.5, 1.0])
+robot.pick_and_place("orange", [0.0, -0.15, 1.0])
+
+# Example: Circle arrangement
+objects = ["ball_1", "ball_2", "ball_3", "ball_4"]
+robot.pick_and_place("ball_1", [0.0, -0.85, 1.0])
+robot.pick_and_place("ball_2", [0.35, -0.5, 1.0])
+robot.pick_and_place("ball_3", [0.0, -0.15, 1.0])
+robot.pick_and_place("ball_4", [-0.35, -0.5, 1.0])
+
+# Example: Triangle
+objects = ["fork", "spoon", "knife"]
+robot.pick_and_place("fork", [0.0, -0.2, 1.0])
+robot.pick_and_place("spoon", [-0.35, -0.8, 1.0])
+robot.pick_and_place("knife", [0.35, -0.8, 1.0])
+
+# Example: Grid (2x2)
+objects = ["item_1", "item_2", "item_3", "item_4"]
+robot.pick_and_place("item_1", [-0.2, -0.7, 1.0])
+robot.pick_and_place("item_2", [ 0.2, -0.7, 1.0])
+robot.pick_and_place("item_3", [-0.2, -0.3, 1.0])
+robot.pick_and_place("item_4", [ 0.2, -0.3, 1.0])
+
+# Example: Diagonal line
+objects = ["cube_1", "cube_2", "cube_3"]
+robot.pick_and_place("cube_1", [-0.3, -0.8, 1.0])
+robot.pick_and_place("cube_2", [ 0.0, -0.5, 1.0])
+robot.pick_and_place("cube_3", [ 0.3, -0.2, 1.0])
+
+# Example: Arc arrangement
+objects = ["tool_1", "tool_2", "tool_3", "tool_4", "tool_5"]
+robot.pick_and_place("tool_1", [-0.3, -0.5, 1.0])
+robot.pick_and_place("tool_2", [-0.15, -0.7, 1.0])
+robot.pick_and_place("tool_3", [ 0.0, -0.8, 1.0])
+robot.pick_and_place("tool_4", [ 0.15, -0.7, 1.0])
+robot.pick_and_place("tool_5", [ 0.3, -0.5, 1.0])
+""".strip()
+
