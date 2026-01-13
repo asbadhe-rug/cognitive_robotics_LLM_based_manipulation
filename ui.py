@@ -20,8 +20,9 @@ from grconvnet import load_grasp_generator
 from clip_utils import ClipInference
 from sam_utils import SamInference
 from llm_utils import prompt_pick_and_place_detection, LLM
-
+from llm_utils import LLM as query_llm, LLM_sort
 from env.objects import YCB_CATEGORIES as ADMISSIBLE_OBJECTS
+from sorting.sort_policy import generate_sort_plan
 
 
 ADMISSIBLE_PREDICATES = ["on", "left", "right", "behind", "front"]
@@ -66,6 +67,7 @@ class RobotEnvUI:
                  ground_truth_segm: bool = True,
                  clip_prompt_eng: bool = False,
                  clip_this_is: bool = False,
+                 selected_objects=None,
                  seed=None
 ):
         # init env
@@ -118,11 +120,40 @@ class RobotEnvUI:
             self.segment = lambda im: self.env.camera.get_cam_img()[-1]
 
         # spawn scene
-        self.spawn(n_objects)
+        self.spawn(n_objects, selected_objects)
+    
+    def multi_object_sort(self, instruction: str):
+        """
+        Sort multiple objects according to a natural language instruction.
+        """
+        objects = list(self.obj_name_to_id.keys())
+        plan = LLM_sort(objects, instruction)
 
-    def spawn(self, n_objects):
+        for step_cmd in plan:
+            step_cmd = step_cmd.replace("robot", "self")
+            attempt = 0
+            while attempt < self.n_action_attempts:
+                gvars = globals()
+                lvars = locals()
+                exec(f"success = {step_cmd}", gvars, lvars)
+                success = lvars['success']
+                if success:
+                    break
+                attempt += 1
+                print(f"Retrying action: {step_cmd}")
+                for _ in range(30):
+                    self.env.step_simulation()
+                self._step()
+            if attempt == self.n_action_attempts:
+                print(f"Failed to execute: {step_cmd}")
+
+        # update object states after sorting
+        self._step()
+
+    def spawn(self, n_objects, selected_objects):
         self.n_objects = n_objects
-        for obj_name in self.objects.obj_names[:self.n_objects]:
+        for obj_name in selected_objects:
+            print(obj_name)
             path, mod_orn, mod_stiffness = self.objects.get_obj_info(obj_name)
             self.env.load_isolated_obj(path, obj_name, mod_orn, mod_stiffness)
         self.env.dummy_simulation_steps(10)
@@ -342,10 +373,15 @@ class RobotEnvUI:
             # ask user for command
             #user_input = input('User Input: ')
             user_input = ask_for_user_input()
-            #user_input = ask_for_user_input_and_display_result()
+
+            if user_input.lower().startswith("sort"):
+                print("Executing multi-object sort...")
+                self.multi_object_sort(user_input)
+                self.history = self.get_visual_ctx()
+                continue
 
             # clear history
-            if user_input == ':clear':
+            elif user_input == ':clear':
                 self.history = self.get_visual_ctx()
                 self.env.dummy_simulation_steps(10)
                 continue

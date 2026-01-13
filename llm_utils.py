@@ -1,7 +1,8 @@
 from huggingface_hub import InferenceClient
 import time
+import os
 
-hugging_hub_token = None
+hugging_hub_token = os.environ.get("HF_TOKEN")
 if hugging_hub_token is None:
     raise ValueError("Get your Hugging Hub API token from here: https://huggingface.co/docs/hub/security-tokens.\nThen, set it in llm_utils.py.")
 
@@ -9,53 +10,31 @@ if hugging_hub_token is None:
 llm_inference = InferenceClient("meta-llama/Llama-3.2-3B-Instruct", token=hugging_hub_token) #Llama-3.2
 
 
-def LLM(         query,
-                 prompt,
-                 stop_tokens = None,
-                 max_length = 128,
-                 temperature=1.,
-                 return_full_text = False,
-                 verbose = False
-):
+def LLM(query, prompt, **params):
+    # This role forces the Instruct model to behave like a Base model
+    messages = [
+        {
+            "role": "system", 
+            "content": "You are a code completion engine for a robot. Output ONLY the next line of code. Do not use markdown. Do not explain. Your output must start with 'robot.pick_and_place'."
+        },
+        {"role": "user", "content": prompt + "\n\n" + query}
+    ]
     
-    new_prompt = f'{prompt}\n{query}\n'
+    response = llm_inference.chat_completion(
+        messages=messages,
+        max_tokens=64, # Shorten this to prevent long ramblings
+        temperature=0,
+        # 'stop' is our safety net: it cuts the LLM off if it starts talking
+        stop=["#", "class", "```", "Note:", "\n\n"] 
+    )
     
-    params = {
-        "max_new_tokens": max_length,
-        "top_k": None,
-        "top_p": None,
-        #"temperature": temperature,
-        "do_sample": False,
-        # "seed": 42, #useless
-        # "early_stopping":None,
-        # "no_repeat_ngram_size":None,
-        # "num_beams":None,
-        # "return_full_text":return_full_text,
-        # 'wait_for_model' : True
-    }
-    s = time.time()
-    #response = llm_inference(new_prompt, params=params)
-    response = llm_inference.text_generation(new_prompt, **params)
-    proc_time = time.time()-s
-    if verbose:
-        print(f"Inference time {proc_time} seconds")
+    content = response.choices[0].message.content.strip()
+    
+    # Final safety check: if it still put text before the command, strip it
+    if "robot." in content:
+        content = content[content.find("robot."):]
         
-    if isinstance(response, dict):
-        assert list(response.keys()) == ['error']
-        raise ValueError(f'sth went wrong with prompt {new_prompt}')
-
-    #response = response[0]['generated_text']
-    #response = response[(response.find(query) + len(query) + 1):]
-
-    if stop_tokens is not None:
-        if verbose:
-            print('Stopping')
-        for stoken in stop_tokens:
-            if stoken in response:
-                response = response[:response.index(stoken)]
-
-
-    return response
+    return content
 
 
 def LLMWrapper(query, context, verbose=False):
@@ -73,6 +52,27 @@ def LLMWrapper(query, context, verbose=False):
         print(resp_full)
     return resp, resp_obj
 
+
+def LLM_sort(objects, instruction, max_length=128):
+    objects_str = ', '.join([f'"{o}"' for o in objects])
+    query = prompt_sorting.format(objects_list=objects_str, instruction=instruction)
+
+    resp = LLM(query, prompt="", max_length=max_length, stop_tokens=["#"]).strip()
+    
+    # Safety: only keep lines starting with robot.pick_and_place
+    steps = [line for line in resp.split('\n') if line.startswith("robot.pick_and_place")]
+    print(steps)
+    return steps
+
+prompt_sorting = """
+objects = [{objects_list}]
+# Sort objects according to the following instruction:
+# {instruction}
+# Only use robot.pick_and_place(...). 
+# Use only these destinations: top left corner, top side, top right corner, left side, middle, right side, bottom left corner, bottom side, bottom right corner, tray.
+# Output each step as a pick_and_place command.
+# Do not explain or add text.
+""".strip()
 
 prompt_pick_and_place_detection = """
 objects = ["scissors", "pear", "hammer", "mustard bottle", "tray"]
