@@ -11,6 +11,7 @@ import cv2
 import ast
 import re
 import math
+from geometric_planner import GeometricPlanner
 #import streamlit as st
 
 # pprint = lambda s: display(HTML(highlight(s, PythonLexer(), HtmlFormatter(full=True))))
@@ -22,8 +23,12 @@ from env.objects import YcbObjects
 from grconvnet import load_grasp_generator
 from clip_utils import ClipInference
 from sam_utils import SamInference
-from llm_utils import prompt_pick_and_place_detection, LLM, LLM_geometric
-
+from llm_utils import (
+    prompt_pick_and_place_detection, 
+    LLM, 
+    LLM_geometric,
+    LLM_shape_parser
+)
 from env.objects import YCB_CATEGORIES as ADMISSIBLE_OBJECTS
 
 
@@ -107,6 +112,8 @@ class RobotEnvUI:
         self.prompt = prompt_pick_and_place_detection
         self.history = []
         self.n_action_attempts = n_action_attempts
+
+        self.planner = GeometricPlanner()
         
         # load CLIP for vision-language grounding
         self.clip_model = ClipInference()
@@ -528,16 +535,11 @@ class RobotEnvUI:
     def run(self):
         """
         Main interactive loop for LLM-based geometric arrangement.
-        The user types instructions, LLM generates pick-and-place commands,
-        and the robot executes them in the simulation.
         """
 
-        # Initialize history with current visual context
         self.history = self.get_visual_ctx()
 
         while True:
-
-            # Ask for user instruction
             user_input = ask_for_user_input()
             if not user_input:
                 continue
@@ -562,24 +564,103 @@ class RobotEnvUI:
                 self.env.close()
                 break
 
-            # Call LLM for geometric arrangement plan
-            print("Calling LLM for plan...")
-            llm_output = LLM_geometric(
+            # Parse instruction
+            shape_intent = LLM_shape_parser(
                 instruction=user_input,
-                objects_list=self.clip_names,
+                n_objects=len(self.clip_names),
                 llm_fn=self.LLM
             )
-
-            print("\nLLM Output:")
+            
+            print(f"Detected: {shape_intent}")
+            
+            # Generate coordinates
+            try:
+                if shape_intent.get("type") == "multiple":
+                    # Multiple shapes
+                    print("🎨 Generating multiple shapes...")
+                    all_coords = []
+                    
+                    for shape_num, shape_def in enumerate(shape_intent["shapes"]):
+                        n_objs = shape_def.get("objects", 1)
+                        
+                        if n_objs <= 0:
+                            print(f"⚠️  Shape {shape_num + 1} has no objects")
+                            continue
+                        
+                        print(f"  Shape {shape_num + 1}: {shape_def['shape']} with {n_objs} objects")
+                        
+                        try:
+                            # Generate coordinates for this shape
+                            coords = self.planner.plan_shape(
+                                shape=shape_def["shape"],
+                                n_objects=n_objs,
+                                **shape_def.get("params", {})
+                            )
+                            
+                            # Apply offset if specified (at top level, not nested in params)
+                            offset = shape_def.get("offset", [0, 0, 0])
+                            if offset != [0, 0, 0]:
+                                coords = [(x + offset[0], y + offset[1], z + offset[2]) 
+                                        for x, y, z in coords]
+                                print(f"    Applied offset: {offset}")
+                            
+                            # Clamp to workspace bounds
+                            coords = [(max(-0.35, min(0.35, x)), 
+                                    max(-0.85, min(-0.15, y)), 
+                                    max(1.0, z)) for x, y, z in coords]
+                            
+                            all_coords.extend(coords)
+                            
+                        except Exception as e:
+                            print(f"⚠️  Error generating shape {shape_num + 1}: {e}")
+                            print(f"    Shape def: {shape_def}")
+                            import traceback
+                            traceback.print_exc()
+                            # Skip this shape and continue
+                            continue
+                    
+                    coords = all_coords
+                    print(f"✅ Generated {len(coords)} positions total")
+                    
+                else:
+                    # ✅ ADD THIS ELSE BRANCH FOR SINGLE SHAPES
+                    # Single shape
+                    n_objs_to_use = shape_intent.get('objects') or shape_intent.get('params', {}).get('objects')
+                    
+                    if n_objs_to_use is None:
+                        n_objs_to_use = len(self.clip_names)
+                    
+                    # Make sure we don't exceed available objects
+                    n_objs_to_use = min(n_objs_to_use, len(self.clip_names))
+                    
+                    print(f"🔵 Generating single shape: {shape_intent['shape']} with {n_objs_to_use} objects")
+                    
+                    coords = self.planner.plan_shape(
+                        shape=shape_intent['shape'],
+                        n_objects=n_objs_to_use,
+                        **{k: v for k, v in shape_intent.get('params', {}).items() if k != 'objects'}
+                    )
+                    print(f"✅ Generated {len(coords)} positions")
+            
+            except Exception as e:
+                print(f"⚠️  Error: {e}")
+                import traceback
+                traceback.print_exc()
+                print("   Falling back to circle")
+                coords = self.planner.plan_shape("circle", len(self.clip_names))
+            
+            # Generate commands
+            commands = []
+            for obj_name, (x, y, z) in zip(self.clip_names, coords):
+                commands.append(f'robot.pick_and_place("{obj_name}", [{x:.3f}, {y:.3f}, {z:.3f}])')
+            
+            llm_output = "\n".join(commands)
+            
+            print("\nGenerated Commands:")
             print(highlight(llm_output, PythonLexer(), TerminalFormatter()).strip())
             print()
-
-            # Execute LLM-generated pick-and-place commands
+            
+            # Execute
             self.execute_llm_plan(llm_output)
-
-            # Update object states, CLIP predictions, and grasps
             self._step()
-
-            # Save history
-            self.history += "\n# " + user_input + "\n" + llm_output
 
