@@ -81,13 +81,15 @@ def llm_generate_coordinates(objects, instruction, model_name):
     
     [OUTPUT]
     Return ONLY a JSON object. 
-    "selected_objects" must be a subset of the AVAILABLE OBJECTS list.
+    "selected_objects" must be a subset of the AVAILABLE OBJECTS list. Use all objects in AVAILABLE OBJECTS unless the subset is specified.
     
     Example: {{
       "selected_objects": ["apple", "banana"], 
       "schema": "line", 
       "params": {{"center_x": 0.0, "center_y": -0.5, "size": 0.1}}
     }}
+
+    DO NOT RETURN EMPTY VALUES
     """
 
     client =  get_client(model_name)
@@ -115,7 +117,7 @@ def llm_generate_coordinates(objects, instruction, model_name):
 
         start = raw_text.find('{')
         end = raw_text.rfind('}') + 1
-        decision = json.loads(raw_text[start:end])
+        decision = safe_json_loads(raw_text[start:end])
         
         # 1. Use the subset the LLM chose
         selected = decision.get("selected_objects", objects)
@@ -144,3 +146,11 @@ def llm_generate_plan(objects, instruction, model_name):
     plt.figure(figsize=(4,4)); plt.scatter(xs, ys); plt.xlim(-0.4, 0.4); plt.ylim(-0.9, -0.1); plt.show()
 
     return "\n".join([f'robot.pick_and_place("{p["obj"]}", [{p["x"]}, {p["y"]}, 1.0])' for p in positions])
+
+
+def safe_json_loads(s: str):
+    # remove // comments
+    s = re.sub(r'//.*$', '', s, flags=re.MULTILINE)
+    # remove trailing commas
+    s = re.sub(r',\s*([}\]])', r'\1', s)
+    return json.loads(s)

@@ -1,0 +1,125 @@
+meta-llama/Meta-Llama-3-8B-Instruct
+Make a circle
+Grasp success rate: 0.6667
+Successful grasps: 2
+Total attempts: 3
+meta-llama/Meta-Llama-3-8B-Instruct
+Make a circle
+Grasp success rate: 1.0000
+Successful grasps: 2
+Total attempts: 2
+meta-llama/Meta-Llama-3-8B-Instruct
+Arrange all objects to create a square
+Grasp success rate: 0.8000
+Successful grasps: 4
+Total attempts: 5
+meta-llama/Meta-Llama-3-8B-Instruct
+Arrange all objects to create a square
+Grasp success rate: 0.5714
+Successful grasps: 4
+Total attempts: 7
+meta-llama/Meta-Llama-3-8B-Instruct
+Form a triangle
+Grasp success rate: 0.6000
+Successful grasps: 3
+Total attempts: 5
+meta-llama/Meta-Llama-3-8B-Instruct
+Form a triangle
+Grasp success rate: 1.0000
+Successful grasps: 3
+Total attempts: 3
+gpt-3.5-turbo
+Make a circle
+Grasp success rate: 0.2500
+Successful grasps: 1
+Total attempts: 4
+gpt-3.5-turbo
+Make a circle
+Grasp success rate: 0.3333
+Successful grasps: 2
+Total attempts: 6
+gpt-3.5-turbo
+Arrange all objects to create a square
+Grasp success rate: 0.6667
+Successful grasps: 4
+Total attempts: 6
+gpt-3.5-turbo
+Arrange all objects to create a square
+Grasp success rate: 0.7500
+Successful grasps: 3
+Total attempts: 4
+gpt-3.5-turbo
+Form a triangle
+Grasp success rate: 1.0000
+Successful grasps: 3
+Total attempts: 3
+gpt-3.5-turbo
+Form a triangle
+Grasp success rate: 1.0000
+Successful grasps: 3
+Total attempts: 3
+mistralai/Mistral-7B-Instruct-v0.2
+Make a circle
+Grasp success rate: 0.0000
+Successful grasps: 0
+Total attempts: 0
+mistralai/Mistral-7B-Instruct-v0.2
+Make a circle
+Grasp success rate: 0.0000
+Successful grasps: 0
+Total attempts: 0
+mistralai/Mistral-7B-Instruct-v0.2
+Arrange all objects to create a square
+Grasp success rate: 0.0000
+Successful grasps: 0
+Total attempts: 0
+mistralai/Mistral-7B-Instruct-v0.2
+Arrange all objects to create a square
+Grasp success rate: 0.0000
+Successful grasps: 0
+Total attempts: 0
+mistralai/Mistral-7B-Instruct-v0.2
+Form a triangle
+Grasp success rate: 0.0000
+Successful grasps: 0
+Total attempts: 0
+mistralai/Mistral-7B-Instruct-v0.2
+Form a triangle
+Grasp success rate: 0.0000
+Successful grasps: 0
+Total attempts: 0
+gpt-3.5-turbo
+None
+Grasp success rate: 0.6000
+Successful grasps: 3
+Total attempts: 5
+meta-llama/Meta-Llama-3-8B-Instruct
+None
+Grasp success rate: 0.0000
+Successful grasps: 0
+Total attempts: 0
+meta-llama/Meta-Llama-3-8B-Instruct
+None
+Grasp success rate: 1.0000
+Successful grasps: 3
+Total attempts: 3
+meta-llama/Meta-Llama-3-8B-Instruct
+None
+Grasp success rate: 1.0000
+Successful grasps: 4
+Total attempts: 4
+meta-llama/Meta-Llama-3-8B-Instruct
+None
+Grasp success rate: 0.6667
+Successful grasps: 2
+Total attempts: 3
+meta-llama/Meta-Llama-3-8B-Instruct
+None
+Grasp success rate: 0.9091
+Successful grasps: 10
+Total attempts: 11
+meta-llama/Meta-Llama-3-8B-Instruct
+None
+Grasp success rate: 0.7500
+Successful grasps: 9
+Total attempts: 12

@@ -67,6 +67,7 @@ class RobotEnvUI:
                  clip_prompt_eng: bool = False,
                  clip_this_is: bool = False,
                  selected_objects: list = None,
+                 user_input=None,
                  seed=None
 ):
         # init env
@@ -117,6 +118,11 @@ class RobotEnvUI:
 
         # spawn scene
         self.spawn(n_objects, selected_objects)
+
+        self.user_input = user_input
+
+        self.total_grasp_attempts = 0
+        self.successful_grasps = 0
     
     def validate_coordinates(self, x, y, z):
         """
@@ -406,9 +412,13 @@ class RobotEnvUI:
 
         target_loc = list(where)
 
+        self.total_grasp_attempts += 1
+
         success_grasp, success_target = self.env.put_obj_in_loc(what, target_loc)
 
         # Retry logic (unchanged)
+        if success_grasp:
+            self.successful_grasps += 1
         if success_grasp and success_target:
             success = True
         elif success_grasp:
@@ -432,59 +442,54 @@ class RobotEnvUI:
 
     def run(self):
         self.history = self.get_visual_ctx()
+        user_input = self.user_input
+        user_input = ask_for_user_input()
+        if not user_input:
+            raise ValueError("user_input must be provided for scripted runs")
 
-        while True:
-            user_input = ask_for_user_input()
-            if not user_input:
-                continue
+        objects = self.clip_names
 
-            # Special commands
-            if user_input == ":clear":
-                self.history = self.get_visual_ctx()
-                self.env.dummy_simulation_steps(10)
-                continue
-            elif user_input == ":reset":
-                self.reset_scene(new=False)
-                self.history = self.get_visual_ctx()
-                self.env.dummy_simulation_steps(10)
-                continue
-            elif user_input == ":new":
-                self.reset_scene(new=True)
-                self.history = self.get_visual_ctx()
-                self.env.dummy_simulation_steps(10)
-                continue
-            elif user_input == ":exit":
-                print("Exiting demo")
-                self.env.close()
-                break
+        try:
+            llm_output = llm_generate_plan(
+                objects=objects,
+                instruction=user_input,
+                model_name=self.model_name
+            )
 
-            objects = self.clip_names
-            
-            try:
-                # Use multi-strategy approach with full debug output
-                llm_output = llm_generate_plan(
-                    objects=objects,
-                    instruction=user_input,
-                    model_name=self.model_name
-                )
-                
-                print("\n" + "="*80)
-                print("GENERATED COMMANDS:")
-                print("="*80)
-                print(highlight(llm_output, PythonLexer(), TerminalFormatter()).strip())
-                print("="*80)
-                
-                
-                # Execute
-                self.execute_llm_plan(llm_output)
-                self._step()
+            print("\n" + "=" * 80)
+            print("GENERATED COMMANDS:")
+            print("=" * 80)
+            print(highlight(llm_output, PythonLexer(), TerminalFormatter()).strip())
+            print("=" * 80)
 
-            except Exception as e:
-                print(f"\n{'!'*80}")
-                print(f"⚠️ EXECUTION FAILED")
-                print(f"{'!'*80}")
-                print(f"Error: {e}")
-                import traceback
-                traceback.print_exc()
+            self.execute_llm_plan(llm_output)
+            self._step()
+
+            self.save_grasp_success_rate("results.txt")
+            print("Saved grasp success to results.txt")
+
+        except Exception as e:
+            print(f"\n{'!' * 80}")
+            print("⚠️ EXECUTION FAILED")
+            print(f"{'!' * 80}")
+            print(f"Error: {e}")
+            import traceback
+            traceback.print_exc()
+
+        finally:
+            self.env.close()
+
+    def save_grasp_success_rate(self, filename="results.txt"):
+        if self.total_grasp_attempts == 0:
+            rate = 0.0
+        else:
+            rate = self.successful_grasps / self.total_grasp_attempts
+
+        with open(filename, "a") as f:
+            f.write(f"{self.model_name}\n")
+            f.write(f"{self.user_input}\n")
+            f.write(f"Grasp success rate: {rate:.4f}\n")
+            f.write(f"Successful grasps: {self.successful_grasps}\n")
+            f.write(f"Total attempts: {self.total_grasp_attempts}\n")
         
 
