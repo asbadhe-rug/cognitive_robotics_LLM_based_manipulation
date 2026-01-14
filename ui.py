@@ -11,7 +11,6 @@ import cv2
 import ast
 import re
 import math
-from geometric_planner import GeometricPlanner
 #import streamlit as st
 
 # pprint = lambda s: display(HTML(highlight(s, PythonLexer(), HtmlFormatter(full=True))))
@@ -23,16 +22,8 @@ from env.objects import YcbObjects
 from grconvnet import load_grasp_generator
 from clip_utils import ClipInference
 from sam_utils import SamInference
-from llm_utils import (
-    prompt_pick_and_place_detection, 
-    LLM, 
-    LLM_geometric,
-    LLM_shape_parser
-)
+from llm_utils import llm_generate_plan
 from env.objects import YCB_CATEGORIES as ADMISSIBLE_OBJECTS
-
-
-ADMISSIBLE_PREDICATES = ["on", "left", "right", "behind", "front"]
 
 
 # GUI stuff
@@ -74,7 +65,7 @@ class RobotEnvUI:
                  ground_truth_segm: bool = True,
                  clip_prompt_eng: bool = False,
                  clip_this_is: bool = False,
-                 clone_name: str = None,
+                 selected_objects: list = None,
                  seed=None
 ):
         # init env
@@ -86,7 +77,6 @@ class RobotEnvUI:
         self.TARGET_ZONE_POS = TARGET_ZONE_POS
         self.ADMISSIBLE_OBJECTS = ADMISSIBLE_OBJECTS
         self.ADMISSIBLE_LOCATIONS = list(self.env.TARGET_LOCATIONS.keys()) + ['tray']
-        self.ADMISSIBLE_PREDICATES = ADMISSIBLE_PREDICATES
 
         # load objects
         self.seed = None
@@ -108,12 +98,8 @@ class RobotEnvUI:
         self.visualise_grasps = visualise_grasps
         
         # define LLM callable and params
-        self.LLM = LLM
-        self.prompt = prompt_pick_and_place_detection
         self.history = []
         self.n_action_attempts = n_action_attempts
-
-        self.planner = GeometricPlanner()
         
         # load CLIP for vision-language grounding
         self.clip_model = ClipInference()
@@ -129,7 +115,7 @@ class RobotEnvUI:
             self.segment = lambda im: self.env.camera.get_cam_img()[-1]
 
         # spawn scene
-        self.spawn(n_objects, clone_name)
+        self.spawn(n_objects, selected_objects)
     
     def validate_coordinates(self, x, y, z):
         """
@@ -276,16 +262,16 @@ class RobotEnvUI:
         raise ValueError(f"Invalid target: {target}")
 
 
-    def spawn(self, n_objects, clone_name):
+    def spawn(self, n_objects, selected_objects):
         self.n_objects = n_objects
-        self.clone_name = clone_name
-        print(self.clone_name)
+        self.selected_objects = selected_objects
+        print(selected_objects)
         print("Hello world")
 
-        if clone_name is not None:
-            for i in range(self.n_objects):
-                path, mod_orn, mod_stiffness = self.objects.get_obj_info(clone_name)
-                self.env.load_isolated_obj(path, clone_name, mod_orn, mod_stiffness)
+        if selected_objects is not None:
+            for obj_name in selected_objects:
+                path, mod_orn, mod_stiffness = self.objects.get_obj_info(obj_name)
+                self.env.load_isolated_obj(path, obj_name, mod_orn, mod_stiffness)
         else:
             for obj_name in self.objects.obj_names[:self.n_objects]:
                 path, mod_orn, mod_stiffness = self.objects.get_obj_info(obj_name)
@@ -407,108 +393,19 @@ class RobotEnvUI:
             self.env.remove_drawing(LID)
             self.env.dummy_simulation_steps(10)
 
-    def parse_predicate(self, obj_id_or_pos, predicate):
-        """
-        Only used for relative placement between objects.
-        Returns absolute [x, y, z].
-        """
-        import math
-
-        TABLE_HEIGHT = 1.0
-
-        # Handle absolute symbolic positions
-        if isinstance(predicate, str):
-            # Circle arrangement
-            if predicate.startswith("circle_"):
-                idx = int(predicate.split("_")[1])
-                n = max(len(self.clip_names), 1)
-                radius = 0.15
-                center_x, center_y = 0.5, -0.5  # Center of table
-                angle = 2 * math.pi * idx / n
-                x = center_x + radius * math.cos(angle)
-                y = center_y + radius * math.sin(angle)
-                z = TABLE_HEIGHT
-                return [x, y, z]
-
-            # Triangle arrangement
-            if predicate.startswith("triangle_"):
-                idx = int(predicate.split("_")[1])
-                triangle_positions = [
-                    (0.5, -0.2),    # bottom (near robot)
-                    (0.3, -0.8),    # top-left
-                    (0.7, -0.8)     # top-right
-                ]
-                x, y = triangle_positions[idx % len(triangle_positions)]
-                z = TABLE_HEIGHT
-                return [x, y, z]
-
-            # Grid arrangement (2x2)
-            if predicate.startswith("grid_"):
-                idx = int(predicate.split("_")[1])
-                grid_positions = [
-                    (0.3, -0.7),    # top-left
-                    (0.7, -0.7),    # top-right
-                    (0.3, -0.3),    # bottom-left
-                    (0.7, -0.3)     # bottom-right
-                ]
-                x, y = grid_positions[idx % len(grid_positions)]
-                z = TABLE_HEIGHT
-                return [x, y, z]
-
-            # Named positions
-            if predicate in self.RELATIVE_POSITIONS:
-                x, y = self.RELATIVE_POSITIONS[predicate]
-                z = TABLE_HEIGHT
-                return [x, y, z]
-
-        # Relative to another object
-        if isinstance(obj_id_or_pos, int) and predicate in self.ADMISSIBLE_PREDICATES:
-            state_ids = {int(x['id']): x for x in self.obj_state}
-            if obj_id_or_pos not in state_ids:
-                raise ValueError(f"Invalid objID {obj_id_or_pos}")
-            target_loc = list(state_ids[obj_id_or_pos]['pos'])
-            
-            # Relative offsets
-            offset = 0.1
-            if predicate == "on":
-                target_loc[2] += 0.05
-            elif predicate == "left":
-                target_loc[0] -= offset  # smaller X is left
-            elif predicate == "right":
-                target_loc[0] += offset  # larger X is right
-            elif predicate == "behind":
-                target_loc[1] -= offset  # more negative Y is farther (behind)
-            elif predicate == "front":
-                target_loc[1] += offset  # less negative Y is closer (front)
-            
-            return target_loc
-
-        raise ValueError(f"Unknown placement: {predicate}")
-
-
     def step(self, what, where, how=None):
         """
         what: obj_id
-        where:
-            - [x, y, z] absolute coordinates
-            - obj_id (ONLY if how is provided)
+        where: [x, y, z] absolute coordinates
         """
 
         assert what in self.obj_ids, f"Invalid objID {what}"
+        assert isinstance(where, (list, tuple)) and len(where) == 3, \
+            f"Invalid placement target: {where}"
 
-        # Relative placement
-        if isinstance(where, int):
-            assert how in self.ADMISSIBLE_PREDICATES
-            target_loc = self.parse_predicate(where, how)
-            success_grasp, success_target = self.env.put_obj_in_loc(what, target_loc)
+        target_loc = list(where)
 
-        # Absolute coordinates
-        elif isinstance(where, (list, tuple)) and len(where) == 3:
-            target_loc = list(where)
-            success_grasp, success_target = self.env.put_obj_in_loc(what, target_loc)
-
-        else:
-            raise ValueError(f"Invalid placement target: {where}")
+        success_grasp, success_target = self.env.put_obj_in_loc(what, target_loc)
 
         # Retry logic (unchanged)
         if success_grasp and success_target:
@@ -533,10 +430,6 @@ class RobotEnvUI:
         return f"""objects = [{', '.join([f'"{name}"' for name in self.clip_names])}, "tray"]"""
 
     def run(self):
-        """
-        Main interactive loop for LLM-based geometric arrangement.
-        """
-
         self.history = self.get_visual_ctx()
 
         while True:
@@ -564,103 +457,32 @@ class RobotEnvUI:
                 self.env.close()
                 break
 
-            # Parse instruction
-            shape_intent = LLM_shape_parser(
-                instruction=user_input,
-                n_objects=len(self.clip_names),
-                llm_fn=self.LLM
-            )
+            objects = self.clip_names
             
-            print(f"Detected: {shape_intent}")
-            
-            # Generate coordinates
             try:
-                if shape_intent.get("type") == "multiple":
-                    # Multiple shapes
-                    print("🎨 Generating multiple shapes...")
-                    all_coords = []
-                    
-                    for shape_num, shape_def in enumerate(shape_intent["shapes"]):
-                        n_objs = shape_def.get("objects", 1)
-                        
-                        if n_objs <= 0:
-                            print(f"⚠️  Shape {shape_num + 1} has no objects")
-                            continue
-                        
-                        print(f"  Shape {shape_num + 1}: {shape_def['shape']} with {n_objs} objects")
-                        
-                        try:
-                            # Generate coordinates for this shape
-                            coords = self.planner.plan_shape(
-                                shape=shape_def["shape"],
-                                n_objects=n_objs,
-                                **shape_def.get("params", {})
-                            )
-                            
-                            # Apply offset if specified (at top level, not nested in params)
-                            offset = shape_def.get("offset", [0, 0, 0])
-                            if offset != [0, 0, 0]:
-                                coords = [(x + offset[0], y + offset[1], z + offset[2]) 
-                                        for x, y, z in coords]
-                                print(f"    Applied offset: {offset}")
-                            
-                            # Clamp to workspace bounds
-                            coords = [(max(-0.35, min(0.35, x)), 
-                                    max(-0.85, min(-0.15, y)), 
-                                    max(1.0, z)) for x, y, z in coords]
-                            
-                            all_coords.extend(coords)
-                            
-                        except Exception as e:
-                            print(f"⚠️  Error generating shape {shape_num + 1}: {e}")
-                            print(f"    Shape def: {shape_def}")
-                            import traceback
-                            traceback.print_exc()
-                            # Skip this shape and continue
-                            continue
-                    
-                    coords = all_coords
-                    print(f"✅ Generated {len(coords)} positions total")
-                    
-                else:
-                    # ✅ ADD THIS ELSE BRANCH FOR SINGLE SHAPES
-                    # Single shape
-                    n_objs_to_use = shape_intent.get('objects') or shape_intent.get('params', {}).get('objects')
-                    
-                    if n_objs_to_use is None:
-                        n_objs_to_use = len(self.clip_names)
-                    
-                    # Make sure we don't exceed available objects
-                    n_objs_to_use = min(n_objs_to_use, len(self.clip_names))
-                    
-                    print(f"🔵 Generating single shape: {shape_intent['shape']} with {n_objs_to_use} objects")
-                    
-                    coords = self.planner.plan_shape(
-                        shape=shape_intent['shape'],
-                        n_objects=n_objs_to_use,
-                        **{k: v for k, v in shape_intent.get('params', {}).items() if k != 'objects'}
-                    )
-                    print(f"✅ Generated {len(coords)} positions")
-            
+                # Use multi-strategy approach with full debug output
+                llm_output = llm_generate_plan(
+                    objects=objects,
+                    instruction=user_input
+                )
+                
+                print("\n" + "="*80)
+                print("GENERATED COMMANDS:")
+                print("="*80)
+                print(highlight(llm_output, PythonLexer(), TerminalFormatter()).strip())
+                print("="*80)
+                
+                
+                # Execute
+                self.execute_llm_plan(llm_output)
+                self._step()
+
             except Exception as e:
-                print(f"⚠️  Error: {e}")
+                print(f"\n{'!'*80}")
+                print(f"⚠️ EXECUTION FAILED")
+                print(f"{'!'*80}")
+                print(f"Error: {e}")
                 import traceback
                 traceback.print_exc()
-                print("   Falling back to circle")
-                coords = self.planner.plan_shape("circle", len(self.clip_names))
-            
-            # Generate commands
-            commands = []
-            for obj_name, (x, y, z) in zip(self.clip_names, coords):
-                commands.append(f'robot.pick_and_place("{obj_name}", [{x:.3f}, {y:.3f}, {z:.3f}])')
-            
-            llm_output = "\n".join(commands)
-            
-            print("\nGenerated Commands:")
-            print(highlight(llm_output, PythonLexer(), TerminalFormatter()).strip())
-            print()
-            
-            # Execute
-            self.execute_llm_plan(llm_output)
-            self._step()
+        
 
