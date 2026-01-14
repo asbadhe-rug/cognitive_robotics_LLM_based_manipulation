@@ -1,12 +1,22 @@
 import os, json, re, math
 import matplotlib.pyplot as plt
 from huggingface_hub import InferenceClient
+from openai import OpenAI
 
 # =========================
 # LLM SETUP
 # =========================
 hugging_hub_token = os.getenv("HF_TOKEN")
-client = InferenceClient("meta-llama/Meta-Llama-3-8B-Instruct", token=hugging_hub_token)
+OPENAI_KEY = os.getenv("OPENAI_KEY")
+
+def get_client(model_name):
+    if model_name in ["meta-llama/Meta-Llama-3-8B-Instruct", "mistralai/Mistral-7B-Instruct-v0.2"]:
+        client = InferenceClient(model_name, token=hugging_hub_token)
+
+    elif model_name == "gpt-3.5-turbo":
+        client = OpenAI(api_key=os.getenv("OPENAI_KEY"))
+    
+    return client
 
 # =========================
 # THE GEOMETRY ENGINE (Python Side)
@@ -53,7 +63,7 @@ def generate_points(schema, n, params):
 # =========================
 # LLM COORDINATOR
 # =========================
-def llm_generate_coordinates(objects, instruction):
+def llm_generate_coordinates(objects, instruction, model_name):
     # We provide the list of objects in the prompt so the LLM can pick from them
     prompt = f"""
     [SYSTEM]
@@ -80,14 +90,27 @@ def llm_generate_coordinates(objects, instruction):
     }}
     """
 
+    client =  get_client(model_name)
+
     try:
-        response = client.chat_completion(
-            messages=[{"role": "user", "content": prompt}],
-            temperature=0,
-            max_tokens=250
-        )
+        if model_name in  ["meta-llama/Meta-Llama-3-8B-Instruct", "mistralai/Mistral-7B-Instruct-v0.2"] :
+            response = client.chat_completion(
+                messages=[{"role": "user", "content": prompt}],
+                temperature=0,
+                max_tokens=400
+            )
+            raw_text = response.choices[0].message.content.strip()
+        else:
+            response = client.chat.completions.create(
+                model="gpt-3.5-turbo",
+                messages=[
+                    {"role": "system", "content": "You are a robotic controller. Return ONLY JSON as instructed."},
+                    {"role": "user", "content": prompt}
+                ],
+            )
+            raw_text = response.choices[0].message.content.strip()
         
-        raw_text = response.choices[0].message.content.strip()
+        
         print(f"--- [DEBUG] LLM RESPONSE ---\n{raw_text}")
 
         start = raw_text.find('{')
@@ -109,8 +132,11 @@ def llm_generate_coordinates(objects, instruction):
         print(f"[DEBUG] Parser Error: {e}")
         return []
 
-def llm_generate_plan(objects, instruction):
-    positions = llm_generate_coordinates(objects, instruction)
+def llm_generate_plan(objects, instruction, model_name):
+    client = get_client(model_name)
+    
+    
+    positions = llm_generate_coordinates(objects, instruction, model_name)
     if not positions: return "Error: Could not generate plan."
 
     # Visualization

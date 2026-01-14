@@ -57,7 +57,8 @@ def ask_for_user_input():
 class RobotEnvUI:
     
     def __init__(self, 
-                 n_objects: int, 
+                 n_objects: int,
+                 model_name: str, 
                  n_action_attempts: int = 3,
                  n_grasp_attempts: int = 4,
                  visualise_grasps: bool = False,
@@ -72,7 +73,7 @@ class RobotEnvUI:
         center_x, center_y, center_z = CAM_X, CAM_Y, CAM_Z
         self.camera = Camera((center_x, center_y, center_z), (center_x, center_y, 0.785), 0.2, 2.0, (IMG_SIZE, IMG_SIZE), 40)
         self.env = Environment(self.camera, vis=True, asset_root='./env/assets', debug=False, finger_length=0.06)
-        
+        self.model_name = model_name
         # constants
         self.TARGET_ZONE_POS = TARGET_ZONE_POS
         self.ADMISSIBLE_OBJECTS = ADMISSIBLE_OBJECTS
@@ -463,7 +464,8 @@ class RobotEnvUI:
                 # Use multi-strategy approach with full debug output
                 llm_output = llm_generate_plan(
                     objects=objects,
-                    instruction=user_input
+                    instruction=user_input,
+                    model_name=self.model_name
                 )
                 
                 print("\n" + "="*80)
