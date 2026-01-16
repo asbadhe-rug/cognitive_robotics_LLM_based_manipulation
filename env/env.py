@@ -45,7 +45,7 @@ class Environment:
     GRIPPER_MOVING_HEIGHT = 1.25
     GRIPPER_GRASPED_LIFT_HEIGHT = 1.4
     TARGET_ZONE_POS = TARGET_ZONE_POS
-    SIMULATION_STEP_DELAY = 0.0001 #speed of simulator - the lower the fatser ## should be a param
+    SIMULATION_STEP_DELAY = 0.0005 #speed of simulator - the lower the fatser ## should be a param
     FINGER_LENGTH = 0.06
     Z_TABLE_TOP = 0.785
     GRIP_REDUCTION = 0.60

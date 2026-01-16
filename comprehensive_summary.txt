@@ -1,0 +1,1135 @@
+================================================================================
+COORDINATE GENERATION ACCURACY REPORT
+================================================================================
+
+
+================================================================================
+MODEL: meta-llama/Meta-Llama-3-8B-Instruct
+================================================================================
+
+------------ LEVEL 1 --------------
+
+Total experiments: 30
+Fully successful: 22 (73.3%)
+Correct prompt interpretation: 30 (100.0%)
+Valid coordinates: 22 (73.3%)
+Avg shape quality: 0.975
+Min shape quality: 0.891
+Max shape quality: 1.000
+Object selection accuracy (all tests): 30/30 (100.0%)
+Avg selection score: 1.000
+
+Performance by Schema:
+----------------------------------------
+
+  TRIANGLE:
+    Count: 10
+    Success rate: 100.0%
+
+  CIRCLE:
+    Count: 10
+    Success rate: 100.0%
+
+  SQUARE:
+    Count: 10
+    Success rate: 20.0%
+
+--------------------------------------------------------------------------------
+
+Detailed Results:
+--------------------------------------------------------------------------------
+
+1. ✓ PASS - Make a circle with all objects
+   Schema: circle ✓
+   Object selection: ✓ Correctly selected 7 objects
+   Coordinates: 7/7 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+2. ✓ PASS - Make a circle with all objects
+   Schema: circle ✓
+   Object selection: ✓ Correctly selected 7 objects
+   Coordinates: 7/7 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+3. ✓ PASS - Make a circle with all objects
+   Schema: circle ✓
+   Object selection: ✓ Correctly selected 7 objects
+   Coordinates: 7/7 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+4. ✓ PASS - Make a circle with all objects
+   Schema: circle ✓
+   Object selection: ✓ Correctly selected 7 objects
+   Coordinates: 7/7 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+5. ✓ PASS - Make a circle with all objects
+   Schema: circle ✓
+   Object selection: ✓ Correctly selected 7 objects
+   Coordinates: 7/7 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+6. ✓ PASS - Make a circle with all objects
+   Schema: circle ✓
+   Object selection: ✓ Correctly selected 8 objects
+   Coordinates: 8/8 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+7. ✓ PASS - Make a circle with all objects
+   Schema: circle ✓
+   Object selection: ✓ Correctly selected 8 objects
+   Coordinates: 8/8 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+8. ✓ PASS - Make a circle with all objects
+   Schema: circle ✓
+   Object selection: ✓ Correctly selected 8 objects
+   Coordinates: 8/8 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+9. ✓ PASS - Make a circle with all objects
+   Schema: circle ✓
+   Object selection: ✓ Correctly selected 8 objects
+   Coordinates: 8/8 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+10. ✓ PASS - Make a circle with all objects
+   Schema: circle ✓
+   Object selection: ✓ Correctly selected 8 objects
+   Coordinates: 8/8 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+11. ✓ PASS - Arrange all objects to create a square
+   Schema: square ✓
+   Object selection: ✓ Correctly selected 6 objects
+   Coordinates: 6/6 valid ✓
+   Shape quality: 0.992 ✓ (excellent)
+
+12. ✗ FAIL - Arrange all objects to create a square
+   Schema: square ✓
+   Object selection: ✓ Correctly selected 6 objects
+   Coordinates: 0/6 valid ✗
+     - Point 0: X=-0.600 out of bounds
+     - Point 0: Y=0.100 out of bounds
+     - Point 1: Y=0.100 out of bounds
+   Shape quality: 0.891 ✓ (good)
+
+13. ✗ FAIL - Arrange all objects to create a square
+   Schema: square ✓
+   Object selection: ✓ Correctly selected 6 objects
+   Coordinates: 0/6 valid ✗
+     - Point 0: X=-0.600 out of bounds
+     - Point 0: Y=0.100 out of bounds
+     - Point 1: Y=0.100 out of bounds
+   Shape quality: 0.891 ✓ (good)
+
+14. ✗ FAIL - Arrange all objects to create a square
+   Schema: square ✓
+   Object selection: ✓ Correctly selected 6 objects
+   Coordinates: 0/6 valid ✗
+     - Point 0: X=-0.600 out of bounds
+     - Point 0: Y=0.100 out of bounds
+     - Point 1: Y=0.100 out of bounds
+   Shape quality: 0.891 ✓ (good)
+
+15. ✗ FAIL - Arrange all objects to create a square
+   Schema: square ✓
+   Object selection: ✓ Correctly selected 6 objects
+   Coordinates: 0/6 valid ✗
+     - Point 0: X=-0.600 out of bounds
+     - Point 0: Y=0.100 out of bounds
+     - Point 1: Y=0.100 out of bounds
+   Shape quality: 0.891 ✓ (good)
+
+16. ✗ FAIL - Arrange all objects to create a square
+   Schema: square ✓
+   Object selection: ✓ Correctly selected 7 objects
+   Coordinates: 0/7 valid ✗
+     - Point 0: X=-0.600 out of bounds
+     - Point 0: Y=0.100 out of bounds
+     - Point 1: Y=0.100 out of bounds
+   Shape quality: 0.936 ✓ (excellent)
+
+17. ✓ PASS - Arrange all objects to create a square
+   Schema: square ✓
+   Object selection: ✓ Correctly selected 7 objects
+   Coordinates: 7/7 valid ✓
+   Shape quality: 0.983 ✓ (excellent)
+
+18. ✗ FAIL - Arrange all objects to create a square
+   Schema: square ✓
+   Object selection: ✓ Correctly selected 7 objects
+   Coordinates: 0/7 valid ✗
+     - Point 0: X=-0.600 out of bounds
+     - Point 0: Y=0.100 out of bounds
+     - Point 1: Y=0.100 out of bounds
+   Shape quality: 0.936 ✓ (excellent)
+
+19. ✗ FAIL - Arrange all objects to create a square
+   Schema: square ✓
+   Object selection: ✓ Correctly selected 7 objects
+   Coordinates: 0/7 valid ✗
+     - Point 0: X=-0.600 out of bounds
+     - Point 0: Y=0.100 out of bounds
+     - Point 1: Y=0.100 out of bounds
+   Shape quality: 0.936 ✓ (excellent)
+
+20. ✗ FAIL - Arrange all objects to create a square
+   Schema: square ✓
+   Object selection: ✓ Correctly selected 7 objects
+   Coordinates: 0/7 valid ✗
+     - Point 0: X=-0.600 out of bounds
+     - Point 0: Y=0.100 out of bounds
+     - Point 1: Y=0.100 out of bounds
+   Shape quality: 0.936 ✓ (excellent)
+
+21. ✓ PASS - Form a triangle with all objects
+   Schema: triangle ✓
+   Object selection: ✓ Correctly selected 5 objects
+   Coordinates: 5/5 valid ✓
+   Shape quality: 0.994 ✓ (excellent)
+
+22. ✓ PASS - Form a triangle with all objects
+   Schema: triangle ✓
+   Object selection: ✓ Correctly selected 5 objects
+   Coordinates: 5/5 valid ✓
+   Shape quality: 0.994 ✓ (excellent)
+
+23. ✓ PASS - Form a triangle with all objects
+   Schema: triangle ✓
+   Object selection: ✓ Correctly selected 5 objects
+   Coordinates: 5/5 valid ✓
+   Shape quality: 0.994 ✓ (excellent)
+
+24. ✓ PASS - Form a triangle with all objects
+   Schema: triangle ✓
+   Object selection: ✓ Correctly selected 5 objects
+   Coordinates: 5/5 valid ✓
+   Shape quality: 0.994 ✓ (excellent)
+
+25. ✓ PASS - Form a triangle with all objects
+   Schema: triangle ✓
+   Object selection: ✓ Correctly selected 5 objects
+   Coordinates: 5/5 valid ✓
+   Shape quality: 0.994 ✓ (excellent)
+
+26. ✓ PASS - Form a triangle with all objects
+   Schema: triangle ✓
+   Object selection: ✓ Correctly selected 6 objects
+   Coordinates: 6/6 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+27. ✓ PASS - Form a triangle with all objects
+   Schema: triangle ✓
+   Object selection: ✓ Correctly selected 6 objects
+   Coordinates: 6/6 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+28. ✓ PASS - Form a triangle with all objects
+   Schema: triangle ✓
+   Object selection: ✓ Correctly selected 6 objects
+   Coordinates: 6/6 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+29. ✓ PASS - Form a triangle with all objects
+   Schema: triangle ✓
+   Object selection: ✓ Correctly selected 6 objects
+   Coordinates: 6/6 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+30. ✓ PASS - Form a triangle with all objects
+   Schema: triangle ✓
+   Object selection: ✓ Correctly selected 6 objects
+   Coordinates: 6/6 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+================================================================================
+COORDINATE GENERATION ACCURACY REPORT
+================================================================================
+
+
+================================================================================
+MODEL: meta-llama/Meta-Llama-3-8B-Instruct
+================================================================================
+
+Total experiments: 18
+Fully successful: 9 (50.0%)
+Correct prompt interpretation: 18 (100.0%)
+Valid coordinates: 18 (100.0%)
+Avg shape quality: 0.997
+Min shape quality: 0.985
+Max shape quality: 1.000
+Object selection accuracy (all tests): 9/18 (50.0%)
+Avg selection score: 0.826
+
+Performance by Schema:
+----------------------------------------
+
+  SQUARE:
+    Count: 3
+    Success rate: 100.0%
+
+  TRIANGLE:
+    Count: 6
+    Success rate: 0.0%
+
+  CIRCLE:
+    Count: 9
+    Success rate: 66.7%
+
+--------------------------------------------------------------------------------
+
+Detailed Results:
+--------------------------------------------------------------------------------
+
+1. ✓ PASS - Make a circle with all fruits
+   Schema: circle ✓
+   Object selection: ✓ Correctly selected {'Strawberry': 2, 'Pear': 2, 'Banana': 1}
+   Coordinates: 5/5 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+2. ✓ PASS - Make a circle with all fruits
+   Schema: circle ✓
+   Object selection: ✓ Correctly selected {'Strawberry': 2, 'Pear': 2, 'Banana': 1}
+   Coordinates: 5/5 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+3. ✓ PASS - Make a circle with all fruits
+   Schema: circle ✓
+   Object selection: ✓ Correctly selected {'Strawberry': 2, 'Pear': 2, 'Banana': 1}
+   Coordinates: 5/5 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+4. ✗ FAIL - Make a circle with all fruits
+   Schema: circle ✓
+   Object selection: ✗ Expected: {'Strawberry': 3, 'Pear': 2, 'Banana': 2}, Selected: {'Strawberry': 2, 'Pear': 2, 'Banana': 2}. Missing: {'Strawberry': 1}.
+   Coordinates: 6/6 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+5. ✗ FAIL - Make a circle with all fruits
+   Schema: circle ✓
+   Object selection: ✗ Expected: {'Strawberry': 3, 'Pear': 2, 'Banana': 2}, Selected: {'Strawberry': 2, 'Pear': 2, 'Banana': 2}. Missing: {'Strawberry': 1}.
+   Coordinates: 6/6 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+6. ✗ FAIL - Make a circle with all fruits
+   Schema: circle ✓
+   Object selection: ✗ Expected: {'Strawberry': 3, 'Pear': 2, 'Banana': 2}, Selected: {'Strawberry': 2, 'Pear': 2, 'Banana': 2}. Missing: {'Strawberry': 1}.
+   Coordinates: 6/6 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+7. ✓ PASS - Make a frame-like structure with all tennis balls
+   Schema: circle ✓
+   Object selection: ✓ Correctly selected {'TennisBall': 6}
+   Coordinates: 6/6 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+8. ✓ PASS - Make a frame-like structure with all tennis balls
+   Schema: circle ✓
+   Object selection: ✓ Correctly selected {'TennisBall': 6}
+   Coordinates: 6/6 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+9. ✓ PASS - Make a frame-like structure with all tennis balls
+   Schema: circle ✓
+   Object selection: ✓ Correctly selected {'TennisBall': 6}
+   Coordinates: 6/6 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+10. ✓ PASS - Make a frame-like structure with all tennis balls
+   Schema: square ✓
+   Object selection: ✓ Correctly selected {'TennisBall': 8}
+   Coordinates: 8/8 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+11. ✓ PASS - Make a frame-like structure with all tennis balls
+   Schema: square ✓
+   Object selection: ✓ Correctly selected {'TennisBall': 8}
+   Coordinates: 8/8 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+12. ✓ PASS - Make a frame-like structure with all tennis balls
+   Schema: square ✓
+   Object selection: ✓ Correctly selected {'TennisBall': 8}
+   Coordinates: 8/8 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+13. ✗ FAIL - Make a triangle with all yellow objects
+   Schema: triangle ✓
+   Object selection: ✗ Expected: {'Banana': 2, 'MustardBottle': 2}, Selected: {'Banana': 2, 'Strawberry': 1}. Missing: {'MustardBottle': 2}. Extra: {'Strawberry': 1}.
+   Coordinates: 3/3 valid ✓
+   Shape quality: 0.999 ✓ (excellent)
+
+14. ✗ FAIL - Make a triangle with all yellow objects
+   Schema: triangle ✓
+   Object selection: ✗ Expected: {'Banana': 2, 'MustardBottle': 2}, Selected: {'Banana': 2, 'Strawberry': 1}. Missing: {'MustardBottle': 2}. Extra: {'Strawberry': 1}.
+   Coordinates: 3/3 valid ✓
+   Shape quality: 0.999 ✓ (excellent)
+
+15. ✗ FAIL - Make a triangle with all yellow objects
+   Schema: triangle ✓
+   Object selection: ✗ Expected: {'Banana': 2, 'MustardBottle': 2}, Selected: {'Banana': 2, 'Strawberry': 1}. Missing: {'MustardBottle': 2}. Extra: {'Strawberry': 1}.
+   Coordinates: 3/3 valid ✓
+   Shape quality: 0.999 ✓ (excellent)
+
+16. ✗ FAIL - Make a triangle with all yellow objects
+   Schema: triangle ✓
+   Object selection: ✗ Expected: {'Banana': 3, 'MustardBottle': 2}, Selected: {'Banana': 3, 'Strawberry': 1}. Missing: {'MustardBottle': 2}. Extra: {'Strawberry': 1}.
+   Coordinates: 4/4 valid ✓
+   Shape quality: 0.985 ✓ (excellent)
+
+17. ✗ FAIL - Make a triangle with all yellow objects
+   Schema: triangle ✓
+   Object selection: ✗ Expected: {'Banana': 3, 'MustardBottle': 2}, Selected: {'Banana': 3, 'Strawberry': 1}. Missing: {'MustardBottle': 2}. Extra: {'Strawberry': 1}.
+   Coordinates: 4/4 valid ✓
+   Shape quality: 0.985 ✓ (excellent)
+
+18. ✗ FAIL - Make a triangle with all yellow objects
+   Schema: triangle ✓
+   Object selection: ✗ Expected: {'Banana': 3, 'MustardBottle': 2}, Selected: {'Banana': 3, 'Strawberry': 1}. Missing: {'MustardBottle': 2}. Extra: {'Strawberry': 1}.
+   Coordinates: 4/4 valid ✓
+   Shape quality: 0.985 ✓ (excellent)
+
+================================================================================
+COORDINATE GENERATION ACCURACY REPORT
+================================================================================
+
+
+================================================================================
+MODEL: meta-llama/Meta-Llama-3-8B-Instruct
+================================================================================
+
+Total experiments: 15
+Fully successful: 10 (66.7%)
+Correct prompt interpretation: 15 (100.0%)
+Valid coordinates: 15 (100.0%)
+Avg shape quality: 0.997
+Min shape quality: 0.985
+Max shape quality: 1.000
+Object selection accuracy (all tests): 10/15 (66.7%)
+Avg selection score: 0.833
+
+Performance by Schema:
+----------------------------------------
+
+  LINE:
+    Count: 5
+    Success rate: 100.0%
+
+  CIRCLE:
+    Count: 5
+    Success rate: 0.0%
+
+  SQUARE:
+    Count: 5
+    Success rate: 100.0%
+
+--------------------------------------------------------------------------------
+
+Detailed Results:
+--------------------------------------------------------------------------------
+
+1. ✓ PASS - Make a square with all green fruits
+   Schema: square ✓
+   Object selection: ✓ Correctly selected {'Pear': 5}
+   Coordinates: 5/5 valid ✓
+   Shape quality: 0.985 ✓ (excellent)
+
+2. ✓ PASS - Make a square with all green fruits
+   Schema: square ✓
+   Object selection: ✓ Correctly selected {'Pear': 5}
+   Coordinates: 5/5 valid ✓
+   Shape quality: 0.996 ✓ (excellent)
+
+3. ✓ PASS - Make a square with all green fruits
+   Schema: square ✓
+   Object selection: ✓ Correctly selected {'Pear': 5}
+   Coordinates: 5/5 valid ✓
+   Shape quality: 0.996 ✓ (excellent)
+
+4. ✓ PASS - Make a square with all green fruits
+   Schema: square ✓
+   Object selection: ✓ Correctly selected {'Pear': 5}
+   Coordinates: 5/5 valid ✓
+   Shape quality: 0.985 ✓ (excellent)
+
+5. ✓ PASS - Make a square with all green fruits
+   Schema: square ✓
+   Object selection: ✓ Correctly selected {'Pear': 5}
+   Coordinates: 5/5 valid ✓
+   Shape quality: 0.985 ✓ (excellent)
+
+6. ✓ PASS - Make a line with 4 objects on the top side of the table
+   Schema: line ✓
+   Object selection: ✓ Correctly selected 4 objects
+   Coordinates: 4/4 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+7. ✓ PASS - Make a line with 4 objects on the top side of the table
+   Schema: line ✓
+   Object selection: ✓ Correctly selected 4 objects
+   Coordinates: 4/4 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+8. ✓ PASS - Make a line with 4 objects on the top side of the table
+   Schema: line ✓
+   Object selection: ✓ Correctly selected 4 objects
+   Coordinates: 4/4 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+9. ✓ PASS - Make a line with 4 objects on the top side of the table
+   Schema: line ✓
+   Object selection: ✓ Correctly selected 4 objects
+   Coordinates: 4/4 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+10. ✓ PASS - Make a line with 4 objects on the top side of the table
+   Schema: line ✓
+   Object selection: ✓ Correctly selected 4 objects
+   Coordinates: 4/4 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+11. ✗ FAIL - Form a ring with 6 objects smaller than a banana
+   Schema: circle ✓
+   Object selection: ✗ Expected: {'Strawberry': 3, 'Pear': 3}, Selected: {'Strawberry': 6}. Missing: {'Pear': 3}. Extra: {'Strawberry': 3}.
+   Coordinates: 6/6 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+12. ✗ FAIL - Form a ring with 6 objects smaller than a banana
+   Schema: circle ✓
+   Object selection: ✗ Expected: {'Strawberry': 3, 'Pear': 3}, Selected: {'Strawberry': 6}. Missing: {'Pear': 3}. Extra: {'Strawberry': 3}.
+   Coordinates: 6/6 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+13. ✗ FAIL - Form a ring with 6 objects smaller than a banana
+   Schema: circle ✓
+   Object selection: ✗ Expected: {'Strawberry': 3, 'Pear': 3}, Selected: {'Strawberry': 6}. Missing: {'Pear': 3}. Extra: {'Strawberry': 3}.
+   Coordinates: 6/6 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+14. ✗ FAIL - Form a ring with 6 objects smaller than a banana
+   Schema: circle ✓
+   Object selection: ✗ Expected: {'Strawberry': 3, 'Pear': 3}, Selected: {'Strawberry': 6}. Missing: {'Pear': 3}. Extra: {'Strawberry': 3}.
+   Coordinates: 6/6 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+15. ✗ FAIL - Form a ring with 6 objects smaller than a banana
+   Schema: circle ✓
+   Object selection: ✗ Expected: {'Strawberry': 3, 'Pear': 3}, Selected: {'Strawberry': 6}. Missing: {'Pear': 3}. Extra: {'Strawberry': 3}.
+   Coordinates: 6/6 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+================================================================================
+COORDINATE GENERATION ACCURACY REPORT
+================================================================================
+
+
+================================================================================
+MODEL: meta-llama/Meta-Llama-3-8B-Instruct
+================================================================================
+
+Total experiments: 15
+Fully successful: 10 (66.7%)
+Correct prompt interpretation: 15 (100.0%)
+Valid coordinates: 15 (100.0%)
+Avg shape quality: 0.997
+Min shape quality: 0.985
+Max shape quality: 1.000
+Object selection accuracy (all tests): 10/15 (66.7%)
+Avg selection score: 0.833
+
+Performance by Schema:
+----------------------------------------
+
+  SQUARE:
+    Count: 5
+    Success rate: 100.0%
+
+  LINE:
+    Count: 5
+    Success rate: 100.0%
+
+  CIRCLE:
+    Count: 5
+    Success rate: 0.0%
+
+--------------------------------------------------------------------------------
+
+Detailed Results:
+--------------------------------------------------------------------------------
+
+1. ✓ PASS - Make a square with all green fruits
+   Schema: square ✓
+   Object selection: ✓ Correctly selected {'Pear': 5}
+   Coordinates: 5/5 valid ✓
+   Shape quality: 0.985 ✓ (excellent)
+
+2. ✓ PASS - Make a square with all green fruits
+   Schema: square ✓
+   Object selection: ✓ Correctly selected {'Pear': 5}
+   Coordinates: 5/5 valid ✓
+   Shape quality: 0.996 ✓ (excellent)
+
+3. ✓ PASS - Make a square with all green fruits
+   Schema: square ✓
+   Object selection: ✓ Correctly selected {'Pear': 5}
+   Coordinates: 5/5 valid ✓
+   Shape quality: 0.996 ✓ (excellent)
+
+4. ✓ PASS - Make a square with all green fruits
+   Schema: square ✓
+   Object selection: ✓ Correctly selected {'Pear': 5}
+   Coordinates: 5/5 valid ✓
+   Shape quality: 0.985 ✓ (excellent)
+
+5. ✓ PASS - Make a square with all green fruits
+   Schema: square ✓
+   Object selection: ✓ Correctly selected {'Pear': 5}
+   Coordinates: 5/5 valid ✓
+   Shape quality: 0.985 ✓ (excellent)
+
+6. ✓ PASS - Make a line with 4 objects on the top side of the table
+   Schema: line ✓
+   Object selection: ✓ Correctly selected 4 objects
+   Coordinates: 4/4 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+7. ✓ PASS - Make a line with 4 objects on the top side of the table
+   Schema: line ✓
+   Object selection: ✓ Correctly selected 4 objects
+   Coordinates: 4/4 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+8. ✓ PASS - Make a line with 4 objects on the top side of the table
+   Schema: line ✓
+   Object selection: ✓ Correctly selected 4 objects
+   Coordinates: 4/4 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+9. ✓ PASS - Make a line with 4 objects on the top side of the table
+   Schema: line ✓
+   Object selection: ✓ Correctly selected 4 objects
+   Coordinates: 4/4 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+10. ✓ PASS - Make a line with 4 objects on the top side of the table
+   Schema: line ✓
+   Object selection: ✓ Correctly selected 4 objects
+   Coordinates: 4/4 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+11. ✗ FAIL - Form a ring with 6 objects smaller than a banana
+   Schema: circle ✓
+   Object selection: ✗ Expected: {'Strawberry': 3, 'Pear': 3}, Selected: {'Strawberry': 6}. Missing: {'Pear': 3}. Extra: {'Strawberry': 3}.
+   Coordinates: 6/6 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+12. ✗ FAIL - Form a ring with 6 objects smaller than a banana
+   Schema: circle ✓
+   Object selection: ✗ Expected: {'Strawberry': 3, 'Pear': 3}, Selected: {'Strawberry': 6}. Missing: {'Pear': 3}. Extra: {'Strawberry': 3}.
+   Coordinates: 6/6 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+13. ✗ FAIL - Form a ring with 6 objects smaller than a banana
+   Schema: circle ✓
+   Object selection: ✗ Expected: {'Strawberry': 3, 'Pear': 3}, Selected: {'Strawberry': 6}. Missing: {'Pear': 3}. Extra: {'Strawberry': 3}.
+   Coordinates: 6/6 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+14. ✗ FAIL - Form a ring with 6 objects smaller than a banana
+   Schema: circle ✓
+   Object selection: ✗ Expected: {'Strawberry': 3, 'Pear': 3}, Selected: {'Strawberry': 6}. Missing: {'Pear': 3}. Extra: {'Strawberry': 3}.
+   Coordinates: 6/6 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+15. ✗ FAIL - Form a ring with 6 objects smaller than a banana
+   Schema: circle ✓
+   Object selection: ✗ Expected: {'Strawberry': 3, 'Pear': 3}, Selected: {'Strawberry': 6}. Missing: {'Pear': 3}. Extra: {'Strawberry': 3}.
+   Coordinates: 6/6 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+
+================================================================================
+MODEL: gpt-3.5-turbo
+================================================================================
+LEVEL 1
+Total experiments: 29
+Fully successful: 0 (0.0%)
+Correct prompt interpretation: 29 (100.0%)
+Valid coordinates: 29 (100.0%)
+Avg shape quality: 0.998
+Min shape quality: 0.968
+Max shape quality: 1.000
+Object selection accuracy (all tests): 0/29 (0.0%)
+Avg selection score: 0.493
+
+Performance by Schema:
+----------------------------------------
+
+  SQUARE:
+    Count: 9
+    Success rate: 0.0%
+
+  TRIANGLE:
+    Count: 10
+    Success rate: 0.0%
+
+  CIRCLE:
+    Count: 10
+    Success rate: 0.0%
+
+--------------------------------------------------------------------------------
+
+Detailed Results:
+--------------------------------------------------------------------------------
+
+1. ✗ FAIL - Make a circle with all objects
+   Schema: circle ✓
+   Object selection: ✗ Selected 2, expected 7
+   Coordinates: 2/2 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+2. ✗ FAIL - Make a circle with all objects
+   Schema: circle ✓
+   Object selection: ✗ Selected 3, expected 7
+   Coordinates: 3/3 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+3. ✗ FAIL - Make a circle with all objects
+   Schema: circle ✓
+   Object selection: ✗ Selected 3, expected 7
+   Coordinates: 3/3 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+4. ✗ FAIL - Make a circle with all objects
+   Schema: circle ✓
+   Object selection: ✗ Selected 3, expected 7
+   Coordinates: 3/3 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+5. ✗ FAIL - Make a circle with all objects
+   Schema: circle ✓
+   Object selection: ✗ Selected 3, expected 7
+   Coordinates: 3/3 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+6. ✗ FAIL - Make a circle with all objects
+   Schema: circle ✓
+   Object selection: ✗ Selected 2, expected 8
+   Coordinates: 2/2 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+7. ✗ FAIL - Make a circle with all objects
+   Schema: circle ✓
+   Object selection: ✗ Selected 3, expected 8
+   Coordinates: 3/3 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+8. ✗ FAIL - Make a circle with all objects
+   Schema: circle ✓
+   Object selection: ✗ Selected 3, expected 8
+   Coordinates: 3/3 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+9. ✗ FAIL - Make a circle with all objects
+   Schema: circle ✓
+   Object selection: ✗ Selected 3, expected 8
+   Coordinates: 3/3 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+10. ✗ FAIL - Make a circle with all objects
+   Schema: circle ✓
+   Object selection: ✗ Selected 3, expected 8
+   Coordinates: 3/3 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+11. ✗ FAIL - Arrange all objects to create a square
+   Schema: square ✓
+   Object selection: ✗ Selected 4, expected 6
+   Coordinates: 4/4 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+12. ✗ FAIL - Arrange all objects to create a square
+   Schema: square ✓
+   Object selection: ✗ Selected 2, expected 6
+   Coordinates: 2/2 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+13. ✗ FAIL - Arrange all objects to create a square
+   Schema: square ✓
+   Object selection: ✗ Selected 5, expected 6
+   Coordinates: 5/5 valid ✓
+   Shape quality: 0.968 ✓ (excellent)
+
+14. ✗ FAIL - Arrange all objects to create a square
+   Schema: square ✓
+   Object selection: ✗ Selected 3, expected 6
+   Coordinates: 3/3 valid ✓
+   Shape quality: 0.996 ✓ (excellent)
+
+15. ✗ FAIL - Arrange all objects to create a square
+   Schema: square ✓
+   Object selection: ✗ Selected 4, expected 7
+   Coordinates: 4/4 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+16. ✗ FAIL - Arrange all objects to create a square
+   Schema: square ✓
+   Object selection: ✗ Selected 4, expected 7
+   Coordinates: 4/4 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+17. ✗ FAIL - Arrange all objects to create a square
+   Schema: square ✓
+   Object selection: ✗ Selected 4, expected 7
+   Coordinates: 4/4 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+18. ✗ FAIL - Arrange all objects to create a square
+   Schema: square ✓
+   Object selection: ✗ Selected 4, expected 7
+   Coordinates: 4/4 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+19. ✗ FAIL - Arrange all objects to create a square
+   Schema: square ✓
+   Object selection: ✗ Selected 3, expected 7
+   Coordinates: 3/3 valid ✓
+   Shape quality: 0.996 ✓ (excellent)
+
+20. ✗ FAIL - Form a triangle with all objects
+   Schema: triangle ✓
+   Object selection: ✗ Selected 3, expected 5
+   Coordinates: 3/3 valid ✓
+   Shape quality: 0.999 ✓ (excellent)
+
+21. ✗ FAIL - Form a triangle with all objects
+   Schema: triangle ✓
+   Object selection: ✗ Selected 3, expected 5
+   Coordinates: 3/3 valid ✓
+   Shape quality: 0.997 ✓ (excellent)
+
+22. ✗ FAIL - Form a triangle with all objects
+   Schema: triangle ✓
+   Object selection: ✗ Selected 3, expected 5
+   Coordinates: 3/3 valid ✓
+   Shape quality: 0.999 ✓ (excellent)
+
+23. ✗ FAIL - Form a triangle with all objects
+   Schema: triangle ✓
+   Object selection: ✗ Selected 3, expected 5
+   Coordinates: 3/3 valid ✓
+   Shape quality: 0.999 ✓ (excellent)
+
+24. ✗ FAIL - Form a triangle with all objects
+   Schema: triangle ✓
+   Object selection: ✗ Selected 3, expected 5
+   Coordinates: 3/3 valid ✓
+   Shape quality: 0.999 ✓ (excellent)
+
+25. ✗ FAIL - Form a triangle with all objects
+   Schema: triangle ✓
+   Object selection: ✗ Selected 3, expected 6
+   Coordinates: 3/3 valid ✓
+   Shape quality: 0.999 ✓ (excellent)
+
+26. ✗ FAIL - Form a triangle with all objects
+   Schema: triangle ✓
+   Object selection: ✗ Selected 3, expected 6
+   Coordinates: 3/3 valid ✓
+   Shape quality: 0.999 ✓ (excellent)
+
+27. ✗ FAIL - Form a triangle with all objects
+   Schema: triangle ✓
+   Object selection: ✗ Selected 3, expected 6
+   Coordinates: 3/3 valid ✓
+   Shape quality: 0.997 ✓ (excellent)
+
+28. ✗ FAIL - Form a triangle with all objects
+   Schema: triangle ✓
+   Object selection: ✗ Selected 3, expected 6
+   Coordinates: 3/3 valid ✓
+   Shape quality: 0.999 ✓ (excellent)
+
+29. ✗ FAIL - Form a triangle with all objects
+   Schema: triangle ✓
+   Object selection: ✗ Selected 3, expected 6
+   Coordinates: 3/3 valid ✓
+   Shape quality: 0.999 ✓ (excellent)
+
+================================================================================
+COORDINATE GENERATION ACCURACY REPORT
+================================================================================
+
+
+================================================================================
+MODEL: gpt-3.5-turbo
+================================================================================
+LEVEL 2
+Total experiments: 18
+Fully successful: 6 (33.3%)
+Correct prompt interpretation: 18 (100.0%)
+Valid coordinates: 18 (100.0%)
+Avg shape quality: 0.999
+Min shape quality: 0.985
+Max shape quality: 1.000
+Object selection accuracy (all tests): 6/18 (33.3%)
+Avg selection score: 0.677
+
+Performance by Schema:
+----------------------------------------
+
+  TRIANGLE:
+    Count: 6
+    Success rate: 0.0%
+
+  CIRCLE:
+    Count: 6
+    Success rate: 0.0%
+
+  LINE:
+    Count: 6
+    Success rate: 100.0%
+
+--------------------------------------------------------------------------------
+
+Detailed Results:
+--------------------------------------------------------------------------------
+
+1. ✗ FAIL - Make a circle with all fruits
+   Schema: circle ✓
+   Object selection: ✗ Expected: {'Strawberry': 2, 'Pear': 2, 'Banana': 1}, Selected: {'Strawberry': 1, 'Pear': 1, 'Banana': 1}. Missing: {'Strawberry': 1, 'Pear': 1}.
+   Coordinates: 3/3 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+2. ✗ FAIL - Make a circle with all fruits
+   Schema: circle ✓
+   Object selection: ✗ Expected: {'Strawberry': 2, 'Pear': 2, 'Banana': 1}, Selected: {'Strawberry': 1, 'Pear': 1, 'Banana': 1}. Missing: {'Strawberry': 1, 'Pear': 1}.
+   Coordinates: 3/3 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+3. ✗ FAIL - Make a circle with all fruits
+   Schema: circle ✓
+   Object selection: ✗ Expected: {'Strawberry': 2, 'Pear': 2, 'Banana': 1}, Selected: {'Strawberry': 1, 'Pear': 1, 'Banana': 1}. Missing: {'Strawberry': 1, 'Pear': 1}.
+   Coordinates: 3/3 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+4. ✗ FAIL - Make a circle with all fruits
+   Schema: circle ✓
+   Object selection: ✗ Expected: {'Strawberry': 3, 'Pear': 2, 'Banana': 2}, Selected: {'Strawberry': 1, 'Pear': 1, 'Banana': 1}. Missing: {'Strawberry': 2, 'Pear': 1, 'Banana': 1}.
+   Coordinates: 3/3 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+5. ✗ FAIL - Make a circle with all fruits
+   Schema: circle ✓
+   Object selection: ✗ Expected: {'Strawberry': 3, 'Pear': 2, 'Banana': 2}, Selected: {'Strawberry': 3}. Missing: {'Pear': 2, 'Banana': 2}.
+   Coordinates: 3/3 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+6. ✗ FAIL - Make a circle with all fruits
+   Schema: circle ✓
+   Object selection: ✗ Expected: {'Strawberry': 3, 'Pear': 2, 'Banana': 2}, Selected: {'Strawberry': 1, 'Pear': 1, 'Banana': 1}. Missing: {'Strawberry': 2, 'Pear': 1, 'Banana': 1}.
+   Coordinates: 3/3 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+7. ✓ PASS - Make a frame-like structure with all tennis balls
+   Schema: line ✓
+   Object selection: ✓ Correctly selected {'TennisBall': 6}
+   Coordinates: 6/6 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+8. ✓ PASS - Make a frame-like structure with all tennis balls
+   Schema: line ✓
+   Object selection: ✓ Correctly selected {'TennisBall': 6}
+   Coordinates: 6/6 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+9. ✓ PASS - Make a frame-like structure with all tennis balls
+   Schema: line ✓
+   Object selection: ✓ Correctly selected {'TennisBall': 6}
+   Coordinates: 6/6 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+10. ✓ PASS - Make a frame-like structure with all tennis balls
+   Schema: line ✓
+   Object selection: ✓ Correctly selected {'TennisBall': 8}
+   Coordinates: 8/8 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+11. ✓ PASS - Make a frame-like structure with all tennis balls
+   Schema: line ✓
+   Object selection: ✓ Correctly selected {'TennisBall': 8}
+   Coordinates: 8/8 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+12. ✓ PASS - Make a frame-like structure with all tennis balls
+   Schema: line ✓
+   Object selection: ✓ Correctly selected {'TennisBall': 8}
+   Coordinates: 8/8 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+13. ✗ FAIL - Make a triangle with all yellow objects
+   Schema: triangle ✓
+   Object selection: ✗ Expected: {'Banana': 2, 'MustardBottle': 2}, Selected: {'Banana': 1, 'MustardBottle': 1}. Missing: {'Banana': 1, 'MustardBottle': 1}.
+   Coordinates: 2/2 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+14. ✗ FAIL - Make a triangle with all yellow objects
+   Schema: triangle ✓
+   Object selection: ✗ Expected: {'Banana': 2, 'MustardBottle': 2}, Selected: {'MustardBottle': 2}. Missing: {'Banana': 2}.
+   Coordinates: 2/2 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+15. ✗ FAIL - Make a triangle with all yellow objects
+   Schema: triangle ✓
+   Object selection: ✗ Expected: {'Banana': 2, 'MustardBottle': 2}, Selected: {'Banana': 1, 'MustardBottle': 1}. Missing: {'Banana': 1, 'MustardBottle': 1}.
+   Coordinates: 2/2 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+16. ✗ FAIL - Make a triangle with all yellow objects
+   Schema: triangle ✓
+   Object selection: ✗ Expected: {'Banana': 3, 'MustardBottle': 2}, Selected: {'Banana': 2, 'MustardBottle': 2}. Missing: {'Banana': 1}.
+   Coordinates: 4/4 valid ✓
+   Shape quality: 0.985 ✓ (excellent)
+
+17. ✗ FAIL - Make a triangle with all yellow objects
+   Schema: triangle ✓
+   Object selection: ✗ Expected: {'Banana': 3, 'MustardBottle': 2}, Selected: {'MustardBottle': 2}. Missing: {'Banana': 3}.
+   Coordinates: 2/2 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+18. ✗ FAIL - Make a triangle with all yellow objects
+   Schema: triangle ✓
+   Object selection: ✗ Expected: {'Banana': 3, 'MustardBottle': 2}, Selected: {'MustardBottle': 2}. Missing: {'Banana': 3}.
+   Coordinates: 2/2 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+================================================================================
+COORDINATE GENERATION ACCURACY REPORT
+================================================================================
+
+
+================================================================================
+MODEL: gpt-3.5-turbo
+================================================================================
+LEVEL 3
+Total experiments: 15
+Fully successful: 11 (73.3%)
+Correct prompt interpretation: 15 (100.0%)
+Valid coordinates: 15 (100.0%)
+Avg shape quality: 0.999
+Min shape quality: 0.985
+Max shape quality: 1.000
+Object selection accuracy (all tests): 11/15 (73.3%)
+Avg selection score: 0.947
+
+Performance by Schema:
+----------------------------------------
+
+  LINE:
+    Count: 5
+    Success rate: 100.0%
+
+  CIRCLE:
+    Count: 5
+    Success rate: 100.0%
+
+  SQUARE:
+    Count: 5
+    Success rate: 20.0%
+
+--------------------------------------------------------------------------------
+
+Detailed Results:
+--------------------------------------------------------------------------------
+
+1. ✗ FAIL - Make a square with all green fruits
+   Schema: square ✓
+   Object selection: ✗ Expected: {'Pear': 5}, Selected: {'Pear': 4}. Missing: {'Pear': 1}.
+   Coordinates: 4/4 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+2. ✗ FAIL - Make a square with all green fruits
+   Schema: square ✓
+   Object selection: ✗ Expected: {'Pear': 5}, Selected: {'Pear': 4}. Missing: {'Pear': 1}.
+   Coordinates: 4/4 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+3. ✓ PASS - Make a square with all green fruits
+   Schema: square ✓
+   Object selection: ✓ Correctly selected {'Pear': 5}
+   Coordinates: 5/5 valid ✓
+   Shape quality: 0.985 ✓ (excellent)
+
+4. ✗ FAIL - Make a square with all green fruits
+   Schema: square ✓
+   Object selection: ✗ Expected: {'Pear': 5}, Selected: {'Pear': 4}. Missing: {'Pear': 1}.
+   Coordinates: 4/4 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+5. ✗ FAIL - Make a square with all green fruits
+   Schema: square ✓
+   Object selection: ✗ Expected: {'Pear': 5}, Selected: {'Pear': 4}. Missing: {'Pear': 1}.
+   Coordinates: 4/4 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+6. ✓ PASS - Make a line with 4 objects on the top side of the table
+   Schema: line ✓
+   Object selection: ✓ Correctly selected 4 objects
+   Coordinates: 4/4 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+7. ✓ PASS - Make a line with 4 objects on the top side of the table
+   Schema: line ✓
+   Object selection: ✓ Correctly selected 4 objects
+   Coordinates: 4/4 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+8. ✓ PASS - Make a line with 4 objects on the top side of the table
+   Schema: line ✓
+   Object selection: ✓ Correctly selected 4 objects
+   Coordinates: 4/4 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+9. ✓ PASS - Make a line with 4 objects on the top side of the table
+   Schema: line ✓
+   Object selection: ✓ Correctly selected 4 objects
+   Coordinates: 4/4 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+10. ✓ PASS - Make a line with 4 objects on the top side of the table
+   Schema: line ✓
+   Object selection: ✓ Correctly selected 4 objects
+   Coordinates: 4/4 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+11. ✓ PASS - Form a ring with 6 objects smaller than a banana
+   Schema: circle ✓
+   Object selection: ✓ Correctly selected {'Strawberry': 3, 'Pear': 3}
+   Coordinates: 6/6 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+12. ✓ PASS - Form a ring with 6 objects smaller than a banana
+   Schema: circle ✓
+   Object selection: ✓ Correctly selected {'Strawberry': 3, 'Pear': 3}
+   Coordinates: 6/6 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+13. ✓ PASS - Form a ring with 6 objects smaller than a banana
+   Schema: circle ✓
+   Object selection: ✓ Correctly selected {'Strawberry': 3, 'Pear': 3}
+   Coordinates: 6/6 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+14. ✓ PASS - Form a ring with 6 objects smaller than a banana
+   Schema: circle ✓
+   Object selection: ✓ Correctly selected {'Strawberry': 3, 'Pear': 3}
+   Coordinates: 6/6 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+
+15. ✓ PASS - Form a ring with 6 objects smaller than a banana
+   Schema: circle ✓
+   Object selection: ✓ Correctly selected {'Strawberry': 3, 'Pear': 3}
+   Coordinates: 6/6 valid ✓
+   Shape quality: 1.000 ✓ (excellent)
+

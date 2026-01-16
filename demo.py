@@ -1,7 +1,7 @@
 from ui import RobotEnvUI
 
 models = ["meta-llama/Meta-Llama-3-8B-Instruct","gpt-3.5-turbo", "mistralai/Mistral-7B-Instruct-v0.2" ]
-selected_objects = ["TennisBall", "Strawberry", "Pear", "Pear", "Strawberry", "TennisBall", "Pear", "Pear"]
+selected_objects = ["TennisBall", "TennisBall", "TennisBall", "TennisBall", "TennisBall", "TennisBall"]
 if selected_objects:
     n_objects = len(selected_objects)
 else:

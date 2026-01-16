@@ -459,8 +459,11 @@ class RobotEnvUI:
             print("\n" + "=" * 80)
             print("GENERATED COMMANDS:")
             print("=" * 80)
-            print(highlight(llm_output, PythonLexer(), TerminalFormatter()).strip())
+            #print(highlight(llm_output, PythonLexer(), TerminalFormatter()).strip())
             print("=" * 80)
+
+            if isinstance(llm_output, tuple):
+                llm_output = llm_output[0]
 
             self.execute_llm_plan(llm_output)
             self._step()
@@ -486,6 +489,7 @@ class RobotEnvUI:
             rate = self.successful_grasps / self.total_grasp_attempts
 
         with open(filename, "a") as f:
+            f.write("=========================================")
             f.write(f"{self.model_name}\n")
             f.write(f"{self.user_input}\n")
             f.write(f"Grasp success rate: {rate:.4f}\n")
